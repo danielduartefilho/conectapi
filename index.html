@@ -2,21 +2,30 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meta Ads API Connector</title>
     <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui.css" />
     <style>
         body {
             margin: 0;
-            padding: 0;
+            background: #f8f9fa;
         }
         #swagger-ui {
             max-width: 1460px;
             margin: 0 auto;
             padding: 20px;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
         }
-        .topbar {
-            display: none;
+        .topbar { display: none; }
+        .swagger-ui .info .title { color: #1a73e8; }
+        .swagger-ui .opblock.opblock-get {
+            background: rgba(26, 115, 232, 0.1);
+            border-color: #1a73e8;
+        }
+        .swagger-ui .opblock-summary-method { background: #1a73e8; }
+        .swagger-ui .btn.execute {
+            background-color: #1a73e8;
+            border-color: #1a73e8;
         }
     </style>
 </head>
@@ -25,22 +34,22 @@
     <script src="https://unpkg.com/swagger-ui-dist@4.5.0/swagger-ui-bundle.js"></script>
     <script>
         window.onload = () => {
-            window.ui = SwaggerUIBundle({
-                url: 'connector.yaml',
+            SwaggerUIBundle({
+                url: 'openapi.yaml',
                 dom_id: '#swagger-ui',
-                deepLinking: true,
                 presets: [
                     SwaggerUIBundle.presets.apis,
                     SwaggerUIBundle.SwaggerUIStandalonePreset
                 ],
-                plugins: [
-                    SwaggerUIBundle.plugins.DownloadUrl
-                ],
                 layout: "BaseLayout",
-                defaultModelsExpandDepth: -1,
                 displayRequestDuration: true,
-                filter: true,
-                persistAuthorization: true
+                persistAuthorization: true,
+                requestInterceptor: (req) => {
+                    if (req.url.includes('{ad_account_id}')) {
+                        req.url = req.url.replace('{ad_account_id}', 'act_906594379912215');
+                    }
+                    return req;
+                }
             });
         };
     </script>

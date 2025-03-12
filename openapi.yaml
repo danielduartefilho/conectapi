@@ -1,0 +1,130 @@
+openapi: 3.1.0
+info:
+  title: Meta Ads API Connector
+  version: '1.0.0'
+  description: Conector para Meta Ads API v22.0
+
+servers:
+  - url: https://graph.facebook.com/v22.0
+
+paths:
+  /oauth/access_token:
+    get:
+      summary: Obtém token de sistema
+      parameters:
+        - name: client_id
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "1660695328664197"
+        - name: client_secret
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Token gerado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                  expires_in:
+                    type: integer
+
+  /act_{ad_account_id}/campaigns:
+    get:
+      summary: Lista campanhas
+      parameters:
+        - name: ad_account_id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "act_906594379912215"
+        - name: fields
+          in: query
+          schema:
+            type: string
+          example: "id,name,status"
+      responses:
+        '200':
+          description: Campanhas listadas com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        status:
+                          type: string
+
+  /act_{ad_account_id}/insights:
+    get:
+      summary: Obtém insights das campanhas
+      parameters:
+        - name: ad_account_id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "act_906594379912215"
+        - name: date_preset
+          in: query
+          schema:
+            type: string
+            enum: [today, yesterday, last_3d, last_7d, last_30d]
+        - name: fields
+          in: query
+          schema:
+            type: string
+          example: "impressions,reach,spend"
+        - name: breakdowns
+          in: query
+          schema:
+            type: string
+            enum: [publisher_platform, platform_position, age, gender, region]
+      responses:
+        '200':
+          description: Insights obtidos com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        impressions:
+                          type: integer
+                          example: 69488
+                        reach:
+                          type: integer
+                          example: 33992
+                        spend:
+                          type: number
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+security:
+  - bearerAuth: []
