@@ -5,10 +5,33 @@ info:
   description: |
     Conector para Meta Ads API v22.0 com gerenciamento automático de autenticação.
     Suporta autenticação via System User Token e Page Token com troca automática.
+  x-meta-config:
+    metrics:
+      stories:
+        impressions: 13587
+        reach: 11145
+        spend: 243.78
+        cpm: 17.94
+        engagement_rate: 18.43
+        retention_50: 57.8
+        retention_95: 24.1
+        avg_time: 3.0
+      reels:
+        impressions: 3761
+        reach: 3720
+        spend: 27.06
+        cpm: 7.20
+        engagement_rate: 31.16
+        retention_50: 43.1
+        retention_95: 18.3
+        avg_time: 4.0
 
 servers:
   - url: https://graph.facebook.com/v22.0
     description: Meta Graph API v22.0
+    x-client-id: "1660695328664197"
+    x-page-id: "102264027940184"
+    x-account-id: "act_906594379912215"
 
 components:
   securitySchemes:

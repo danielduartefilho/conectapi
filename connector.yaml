@@ -1,0 +1,96 @@
+openapi: 3.1.0
+info:
+  title: Meta Ads Connector
+  version: '1.0.0'
+  description: |
+    Conector unificado para Meta Ads API v22.0
+    Inclui autenticação automática e endpoints validados para campanhas e insights.
+
+servers:
+  - url: https://graph.facebook.com/v22.0
+    description: Meta Graph API v22.0
+
+x-meta-config:
+  auth:
+    client_id: "1660695328664197"
+    page_id: "102264027940184"
+    account_id: "act_906594379912215"
+    required_scopes:
+      - ads_read
+      - ads_management_read_only
+      - pages_read_engagement
+      - pages_manage_metadata
+      - pages_show_list
+      - pages_read_user_content
+      - public_profile
+
+  metrics:
+    stories:
+      volume:
+        impressions: 13587
+        reach: 11145
+        spend: 243.78
+      efficiency:
+        cpm: 17.94
+        engagement_rate: 18.43
+        cpe: 0.10
+        reach_per_real: 45.7
+      video:
+        retention_50: 57.8
+        retention_95: 24.1
+        avg_time: 3.0
+    
+    reels:
+      volume:
+        impressions: 3761
+        reach: 3720
+        spend: 27.06
+      efficiency:
+        cpm: 7.20
+        engagement_rate: 31.16
+        cpe: 0.02
+        reach_per_real: 137.5
+      video:
+        retention_50: 43.1
+        retention_95: 18.3
+        avg_time: 4.0
+
+  breakdowns:
+    publisher_platform:
+      - instagram
+    platform_position:
+      - stories
+      - reels
+      - feed
+    demographics:
+      - age
+      - gender
+      - region
+
+  date_presets:
+    short:
+      - today
+      - yesterday
+      - last_3d
+      - last_7d
+    medium:
+      - this_week
+      - last_week
+      - last_30d
+    long:
+      - this_month
+      - last_month
+
+paths:
+  $ref: 'https://danielduartefilho.github.io/conectapi/main.yaml#/paths'
+
+components:
+  securitySchemes:
+    $ref: 'https://danielduartefilho.github.io/conectapi/main.yaml#/components/securitySchemes'
+  schemas:
+    $ref: 'https://danielduartefilho.github.io/conectapi/campaigns.yaml#/components/schemas'
+  parameters:
+    $ref: 'https://danielduartefilho.github.io/conectapi/main.yaml#/components/parameters'
+
+security:
+  - bearerAuth: []
