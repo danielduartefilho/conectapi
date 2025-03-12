@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Meta Ads Connector
-  version: '1.0.0'
+  version: '1.0.1'
   description: |
     Conector unificado para Meta Ads API v22.0
     Inclui autenticação automática e endpoints validados para campanhas e insights.
