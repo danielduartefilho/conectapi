@@ -1,0 +1,222 @@
+openapi: 3.1.0
+info:
+  title: Meta Ads API Connector
+  version: '1.0.0'
+  description: Conector para Meta Ads API v22.0 com gerenciamento automático de autenticação
+
+servers:
+  - url: https://graph.facebook.com/v22.0
+    description: Meta Graph API v22.0
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Meta Access Token
+
+  schemas:
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        objective:
+          type: string
+        status:
+          type: string
+          enum: [ACTIVE, PAUSED, DELETED, ARCHIVED]
+        daily_budget:
+          type: number
+        lifetime_budget:
+          type: number
+
+    CampaignList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Campaign'
+        paging:
+          $ref: '#/components/schemas/Paging'
+
+    InsightsData:
+      type: object
+      properties:
+        date_start:
+          type: string
+          format: date
+        date_stop:
+          type: string
+          format: date
+        impressions:
+          type: integer
+          example: 69488
+        reach:
+          type: integer
+          example: 33992
+        spend:
+          type: number
+        ctr:
+          type: number
+        cpc:
+          type: number
+
+    InsightsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/InsightsData'
+        paging:
+          $ref: '#/components/schemas/Paging'
+
+    Paging:
+      type: object
+      properties:
+        cursors:
+          type: object
+          properties:
+            before:
+              type: string
+            after:
+              type: string
+        next:
+          type: string
+          format: uri
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            code:
+              type: integer
+            type:
+              type: string
+
+paths:
+  /oauth/access_token:
+    get:
+      operationId: getSystemToken
+      summary: Obtém System User Token
+      parameters:
+        - name: client_id
+          in: query
+          required: true
+          schema:
+            type: string
+          example: "1660695328664197"
+        - name: client_secret
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Token gerado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                  expires_in:
+                    type: integer
+        '400':
+          $ref: '#/components/schemas/Error'
+
+  /act_{ad_account_id}/campaigns:
+    get:
+      operationId: listCampaigns
+      summary: Lista campanhas
+      parameters:
+        - name: ad_account_id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "act_906594379912215"
+        - name: fields
+          in: query
+          schema:
+            type: string
+          example: "id,name,objective,status,daily_budget"
+      responses:
+        '200':
+          description: Campanhas listadas com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignList'
+        '401':
+          $ref: '#/components/schemas/Error'
+
+  /act_{ad_account_id}/insights:
+    get:
+      operationId: getCampaignInsights
+      summary: Obtém insights das campanhas
+      parameters:
+        - name: ad_account_id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "act_906594379912215"
+        - name: date_preset
+          in: query
+          schema:
+            type: string
+            enum: [today, yesterday, last_7d, last_30d]
+        - name: fields
+          in: query
+          schema:
+            type: string
+          example: "impressions,reach,spend,ctr,cpc"
+        - name: breakdowns
+          in: query
+          schema:
+            type: string
+            enum: [publisher_platform, platform_position, age, gender, region]
+      responses:
+        '200':
+          description: Insights obtidos com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InsightsResponse'
+        '401':
+          $ref: '#/components/schemas/Error'
+
+security:
+  - bearerAuth: []
+
+x-meta-config:
+  auth:
+    client_id: "1660695328664197"
+    page_id: "102264027940184"
+    account_id: "act_906594379912215"
+  metrics:
+    stories:
+      impressions: 13587
+      reach: 11145
+      spend: 243.78
+      cpm: 17.94
+      engagement_rate: 18.43
+    reels:
+      impressions: 3761
+      reach: 3720
+      spend: 27.06
+      cpm: 7.20
+      engagement_rate: 31.16
